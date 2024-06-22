@@ -1,11 +1,21 @@
 import { Form, Input, Button } from 'antd'
 import './index.css'
+import { useDispatch } from 'react-redux'
+import { addTodo } from '../../store/modules/todos'
 
 const AddTodo = () => {
+  const [form] = Form.useForm()
+  const dispatch = useDispatch()
+
+  const onFinish = ({ inputValue }) => {
+    console.log('values', inputValue)
+    dispatch(addTodo(inputValue))
+    form.resetFields()
+  }
   return (
     <div className="add-container">
-      <Form className="add-todo">
-        <Form.Item name="username">
+      <Form className="add-todo" form={form} onFinish={onFinish}>
+        <Form.Item name="inputValue">
           <Input className="todo-detail" size="large" placeholder="请输入" />
         </Form.Item>
         <Form.Item>

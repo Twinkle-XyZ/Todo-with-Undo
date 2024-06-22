@@ -1,14 +1,10 @@
 import { List, Button, Checkbox } from 'antd'
 import Header from '../Header/index'
 import Footer from '../Footer/index'
+import { useSelector } from 'react-redux'
 const TodoList = () => {
-  const data = [
-    'Racing car sprays burning fuel into crowd.',
-    'Japanese princess to wed commoner.',
-    'Australian walks 100km after outback crash.',
-    'Man charged over missing wedding girl.',
-    'Los Angeles battles huge wildfires.',
-  ]
+  const { todoList } = useSelector((state) => state.todos)
+  console.log(todoList)
   return (
     <>
       <List
@@ -17,7 +13,7 @@ const TodoList = () => {
         header={<Header />}
         footer={<Footer />}
         bordered
-        dataSource={data}
+        dataSource={todoList}
         renderItem={(item) => (
           <List.Item
             actions={[
