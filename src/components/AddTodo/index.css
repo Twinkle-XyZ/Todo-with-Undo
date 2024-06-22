@@ -1,0 +1,11 @@
+.add-container {
+  width: 40vw;
+  margin: 0 auto;
+}
+.add-todo {
+  display: flex;
+  justify-content: space-between;
+} 
+.todo-detail {
+  width: 34vw;
+}
