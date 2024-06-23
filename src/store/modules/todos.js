@@ -15,14 +15,20 @@ const todoStore = createSlice({
     addTodo(state, action) {
       state.todoList.push({
         id: +new Date(),
-        content: action.payload
+        content: action.payload,
+        isFinished: false
       })
     },
     editTodo(state, action) {
-
+      console.log('action', action);
+      return {
+        ...state,
+        todoList: state.todoList.map(todo =>
+          todo.id === action.payload.id ? { ...todo, content: action.payload.content } : todo
+        ),
+      }
     },
     delTodo(state, action) {
-      console.log(action);
       return {
         ...state,
         todoList: state.todoList.filter(it => it.id !== action.payload)
