@@ -3,11 +3,22 @@ import Header from '../Header/index'
 import Footer from '../Footer/index'
 import { useDispatch, useSelector } from 'react-redux'
 import { delTodo, editTodo } from '../../store/modules/todos'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const TodoList = () => {
-  const { todoList } = useSelector((state) => state.todos)
-  console.log(todoList)
+  const { todoList, status } = useSelector((state) => state.todos)
+  console.log(todoList, status, 111)
+  const [myList, setMyList] = useState(todoList)
+  const getMyList = () => {
+    console.log('666')
+    if (status === 'All') setMyList(todoList)
+    else if (status === 'Active')
+      setMyList(todoList?.filter((it) => !it.isFinished))
+    else setMyList(todoList?.filter((it) => it.isFinished))
+  }
+  useEffect(() => {
+    getMyList()
+  })
   const dispatch = useDispatch()
   const [editItemId, setEditItemId] = useState()
   const edit = (id, content) => {
@@ -23,9 +34,9 @@ const TodoList = () => {
         size="large"
         className="add-container"
         header={<Header />}
-        footer={todoList.length > 0 && <Footer />}
+        footer={myList.length > 0 && <Footer />}
         bordered
-        dataSource={todoList}
+        dataSource={myList}
         renderItem={(item) => (
           <List.Item
             actions={[

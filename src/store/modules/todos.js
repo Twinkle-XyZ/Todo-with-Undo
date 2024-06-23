@@ -7,8 +7,7 @@ const todoStore = createSlice({
   // 数据状态
   initialState: {
     todoList: [],
-    past: [],
-    future: []
+    status: 'All'
   },
   // 同步修改方法
   reducers: {
@@ -34,6 +33,9 @@ const todoStore = createSlice({
         todoList: state.todoList.filter(it => it.id !== action.payload)
       }
     },
+    changeStatus(state, action) {
+      state.status = action.payload
+    }
   }
 })
 
@@ -44,7 +46,7 @@ const todoReducer = todoStore.reducer
 
 // const todoReducer = undoable(todoStore.reducer);
 // 解构出actionCreater
-export const { addTodo, editTodo, delTodo } = todoStore.actions
+export const { addTodo, editTodo, delTodo, changeStatus } = todoStore.actions
 
 export default todoReducer
 // export default undoableTodoReducer

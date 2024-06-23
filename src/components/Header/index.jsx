@@ -3,27 +3,28 @@ import { useState } from 'react'
 import './index.css'
 import { ActionCreators as UndoActionCreators } from 'redux-undo'
 import { useDispatch } from 'react-redux'
-import { undo, redo } from '../../store/modules/todos'
+import { undo, redo, changeStatus } from '../../store/modules/todos'
 
 const options = [
   {
-    label: 'All',
+    label: '全部',
     value: 'All',
   },
   {
-    label: 'Active',
+    label: '未完成',
     value: 'Active',
   },
   {
-    label: 'Completed',
-    value: 'Completed',
+    label: '已完成',
+    value: 'Finished',
   },
 ]
 const Header = () => {
-  const [value4, setValue4] = useState('Apple')
+  const [value, setValue] = useState('All')
   const onChange = ({ target: { value } }) => {
     console.log('radio4 checked', value)
-    setValue4(value)
+    setValue(value)
+    dispatch(changeStatus(value))
   }
   const dispatch = useDispatch()
   const undoL = () => {
@@ -48,13 +49,13 @@ const Header = () => {
         <Radio.Group
           options={options}
           onChange={onChange}
-          value={value4}
+          value={value}
           optionType="button"
           buttonStyle="solid"
         />
       </div>
       <div className="clear">
-        <Button type="link">Clear</Button>
+        <Button type="link">清除已完成</Button>
       </div>
     </div>
   )
