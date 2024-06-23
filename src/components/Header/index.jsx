@@ -1,6 +1,9 @@
 import { Button, Radio } from 'antd'
 import { useState } from 'react'
 import './index.css'
+import { ActionCreators as UndoActionCreators } from 'redux-undo'
+import { useDispatch } from 'react-redux'
+import { undo, redo } from '../../store/modules/todos'
 
 const options = [
   {
@@ -22,11 +25,24 @@ const Header = () => {
     console.log('radio4 checked', value)
     setValue4(value)
   }
+  const dispatch = useDispatch()
+  const undoL = () => {
+    console.log(111)
+    dispatch(UndoActionCreators.undo())
+  }
+  const redoL = () => {
+    console.log(222)
+    dispatch(UndoActionCreators.redo())
+  }
   return (
     <div className="handle">
       <div className="set-reset">
-        <Button type="link">Undo</Button>
-        <Button type="link">Redo</Button>
+        <Button type="link" onClick={undoL}>
+          Undo
+        </Button>
+        <Button type="link" onClick={redoL}>
+          Redo
+        </Button>
       </div>
       <div className="filter">
         <Radio.Group
