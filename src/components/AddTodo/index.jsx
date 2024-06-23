@@ -8,7 +8,6 @@ const AddTodo = () => {
   const dispatch = useDispatch()
 
   const onFinish = ({ content }) => {
-    console.log('values', content)
     dispatch(addTodo(content))
     form.resetFields()
   }

@@ -1,9 +1,9 @@
-import { Button, Radio } from 'antd'
+import { Button, Radio, Popconfirm } from 'antd'
 import { useState } from 'react'
 import './index.css'
 import { ActionCreators as UndoActionCreators } from 'redux-undo'
 import { useDispatch } from 'react-redux'
-import { undo, redo, changeStatus } from '../../store/modules/todos'
+import { changeStatus, clearFinished } from '../../store/modules/todos'
 
 const options = [
   {
@@ -22,18 +22,18 @@ const options = [
 const Header = () => {
   const [value, setValue] = useState('All')
   const onChange = ({ target: { value } }) => {
-    console.log('radio4 checked', value)
     setValue(value)
     dispatch(changeStatus(value))
   }
   const dispatch = useDispatch()
   const undoL = () => {
-    console.log(111)
     dispatch(UndoActionCreators.undo())
   }
   const redoL = () => {
-    console.log(222)
     dispatch(UndoActionCreators.redo())
+  }
+  const clear = () => {
+    dispatch(clearFinished())
   }
   return (
     <div className="handle">
@@ -55,7 +55,14 @@ const Header = () => {
         />
       </div>
       <div className="clear">
-        <Button type="link">清除已完成</Button>
+        <Popconfirm
+          title="确认清除已完成的事项吗?"
+          onConfirm={clear}
+          okText="确认"
+          cancelText="取消"
+        >
+          <Button type="link">清除已完成</Button>
+        </Popconfirm>
       </div>
     </div>
   )

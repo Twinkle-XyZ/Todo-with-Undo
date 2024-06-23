@@ -6,11 +6,10 @@ import { delTodo, editTodo } from '../../store/modules/todos'
 import { useEffect, useState } from 'react'
 
 const TodoList = () => {
-  const { todoList, status } = useSelector((state) => state.todos)
-  console.log(todoList, status, 111)
+  const { todoList, status } = useSelector((state) => state.todos.present)
   const [myList, setMyList] = useState(todoList)
+
   const getMyList = () => {
-    console.log('666')
     if (status === 'All') setMyList(todoList)
     else if (status === 'Active')
       setMyList(todoList?.filter((it) => !it.isFinished))
@@ -18,15 +17,18 @@ const TodoList = () => {
   }
   useEffect(() => {
     getMyList()
-  })
+  }, [status, todoList])
   const dispatch = useDispatch()
   const [editItemId, setEditItemId] = useState()
   const edit = (id, content) => {
-    dispatch(editTodo({ id, content }))
+    dispatch(editTodo({ id, content, isFinished: false }))
     setEditItemId(null)
   }
   const del = (id) => {
     dispatch(delTodo(id))
+  }
+  const toggleFinish = (id, content, isFinished) => {
+    dispatch(editTodo({ id, content, isFinished: !isFinished }))
   }
   return (
     <>
@@ -34,7 +36,7 @@ const TodoList = () => {
         size="large"
         className="add-container"
         header={<Header />}
-        footer={myList.length > 0 && <Footer />}
+        footer={myList?.length > 0 && <Footer />}
         bordered
         dataSource={myList}
         renderItem={(item) => (
@@ -59,15 +61,28 @@ const TodoList = () => {
               </Popconfirm>,
             ]}
           >
-            <Checkbox style={{ marginRight: '10px' }} />
+            <Checkbox
+              checked={item.isFinished}
+              disabled={item.isFinished}
+              onChange={() =>
+                toggleFinish(item.id, item.content, item.isFinished)
+              }
+            />
             {editItemId === item.id ? (
               <Input
+                style={{ marginLeft: '10px' }}
                 defaultValue={item.content}
                 onPressEnter={(e) => edit(item.id, e.target.value)}
                 onBlur={() => setEditItemId(null)}
               />
             ) : (
-              item.content
+              <span
+                style={{
+                  textDecoration: item.isFinished ? 'line-through' : 'none',
+                }}
+              >
+                {item.content}
+              </span>
             )}
           </List.Item>
         )}

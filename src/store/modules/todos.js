@@ -1,6 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { ActionCreators as UndoActionCreators } from 'redux-undo'
-import undoable, { includeAction } from "redux-undo";
 
 const todoStore = createSlice({
   name: 'todo',
@@ -12,18 +10,20 @@ const todoStore = createSlice({
   // 同步修改方法
   reducers: {
     addTodo(state, action) {
-      state.todoList.push({
-        id: +new Date(),
-        content: action.payload,
-        isFinished: false
-      })
+      state.todoList = [
+        ...state.todoList,
+        {
+          id: +new Date(),
+          content: action.payload,
+          isFinished: false
+        }
+      ]
     },
     editTodo(state, action) {
-      console.log('action', action);
       return {
         ...state,
         todoList: state.todoList.map(todo =>
-          todo.id === action.payload.id ? { ...todo, content: action.payload.content } : todo
+          todo.id === action.payload.id ? { ...todo, content: action.payload.content, isFinished: action.payload.isFinished } : todo
         ),
       }
     },
@@ -33,9 +33,15 @@ const todoStore = createSlice({
         todoList: state.todoList.filter(it => it.id !== action.payload)
       }
     },
+    clearFinished(state) {
+      return {
+        ...state,
+        todoList: state.todoList.filter(it => !it.isFinished)
+      }
+    },
     changeStatus(state, action) {
       state.status = action.payload
-    }
+    },
   }
 })
 
@@ -44,9 +50,7 @@ const todoStore = createSlice({
 // 获取reducer函数
 const todoReducer = todoStore.reducer
 
-// const todoReducer = undoable(todoStore.reducer);
 // 解构出actionCreater
-export const { addTodo, editTodo, delTodo, changeStatus } = todoStore.actions
+export const { addTodo, editTodo, delTodo, clearFinished, changeStatus, undo, redo } = todoStore.actions
 
 export default todoReducer
-// export default undoableTodoReducer
